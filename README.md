@@ -1,6 +1,6 @@
 # humiStack
 
-The agent skills I use to keep repositories and prompts lean, cleaned up so
+The agent skills I use for coding, delegation, and handoffs, cleaned up so
 anyone can use them. For Claude Code, Codex, and OpenCode.
 
 ## Skills
@@ -9,8 +9,11 @@ anyone can use them. For Claude Code, Codex, and OpenCode.
 |---|---|---|
 | `lean-repo` | "lean repo" | Cleans up bloated agent instructions and documentation so agents find the right code and rules faster. |
 | `prompt-refactor` | "refactor this prompt" | Removes repetition from agent prompts while preserving their rules, exceptions, and tool contracts. |
+| `claude-orchestrate` | "Claude orchestrate" | Lets Claude or Codex coordinate CLI workers, with models and tasks assigned by you. |
+| `maxmem` | "maxmem" | Saves and restores compact project memory across agent sessions using MaxMEM. |
+| `agent-handoff` | "hand this off" | Prepares and transfers a task to another agent with its current state, checks, and next steps. |
 
-Install either or both. They work independently.
+Install the ones you need. They work independently.
 
 ## Install
 
@@ -29,7 +32,10 @@ cp -R humiStack/skills/* ~/.config/opencode/skills/  # OpenCode
 
 ## Requirements
 
-A coding agent with file, search, and terminal tools. No extra dependencies.
+- A coding agent with file, search, and terminal tools.
+- `claude-orchestrate` needs the worker CLIs and model access you assign.
+- `maxmem` needs [MaxMEM](https://github.com/NiladriHazra/MaxMEM) installed and configured; its CLI requires Bun.
+- `agent-handoff` works with a plain brief; MaxMEM is optional.
 
 ## Make them yours
 
