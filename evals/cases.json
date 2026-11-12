@@ -1,0 +1,73 @@
+{
+  "cases": [
+    {
+      "id": "lean-repo-edit",
+      "skill": "lean-repo",
+      "prompt": "This repo's agent docs repeat themselves. Make them easier to navigate and apply the cleanup. Keep the app layout, policies, and required final gate intact. Walk through a UI correction and a cross-workspace API fix. Work only in the supplied fixture directory and put your short handoff in RESULT.md. Do not commit or use network services.",
+      "files": {
+        "AGENTS.md": "# Contributor rules\n\nPreserve existing changes. Never publish or deploy without an explicit request.\n\n## UI\nWeb code lives in apps/web. Keep visible focus indicators, support keyboard use, and restore focus after closing a dialog. Use shared design tokens. Run python3 checks.py for the final gate even for instruction changes.\n\n## API\nAPI code lives in services/api. Verify workspace membership before every write, even after approval. A user cannot write to another workspace. A failed membership check returns DENIED without retry. Run python3 checks.py for the final gate even for instruction changes.\n\n## UI reminder\nKeep keyboard navigation and visible focus. Restore focus after dialogs. Use shared design tokens. See [UI notes](docs/ui.md).\n\n## API reminder\nSee [backend notes](docs/backend.md). Require membership for writes.\n",
+        "docs/ui.md": "# UI notes\n\n## Accessibility\nKeep keyboard navigation, visible focus, and dialog focus restoration. Use shared design tokens. Owner: apps/web.\n",
+        "docs/backend.md": "# Backend notes\n\n## Authorization\nVerify workspace membership before every write, including approved actions. Cross-workspace writes return DENIED and are not retried. Owner: services/api.\n",
+        "apps/web/dialog.ts": "export const closeDialog = (trigger: { focus(): void }) => trigger.focus();\n",
+        "services/api/write.py": "def write(member, workspace):\n    if member.workspace != workspace:\n        return 'DENIED'\n    return 'OK'\n",
+        "checks.py": "from pathlib import Path\nassert Path('apps/web/dialog.ts').is_file()\nassert Path('services/api/write.py').is_file()\nprint('Fixture gate passed: application owners still exist.')\n"
+      },
+      "assertions": [
+        "Preserves publishing authorization, UI keyboard/focus/token rules, and all API ownership/DENIED/no-retry conditions.",
+        "Keeps the required python3 checks.py final gate and runs it.",
+        "Provides complete UI and risky API instruction routes with correct source owners.",
+        "Changes guidance only; preserves application sources and existing useful docs.",
+        "Checks links/requirements and avoids billing or latency claims."
+      ]
+    },
+    {
+      "id": "lean-repo-audit",
+      "skill": "lean-repo",
+      "prompt": "Audit these agent instructions for a leaner structure. This is read-only: do not edit source files. Explain the conflict and a useful small restructuring, with routes for a docs fix and a release. Put your answer in RESULT.md only. Do not commit or use network services.",
+      "files": {
+        "AGENTS.md": "# Entry\n\nRead [delivery rules](docs/delivery.md) for every release. Every production deployment needs an explicit current request. Never assume a merge authorizes deployment.\n\nFor internal docs use [documentation rules](docs/documentation.md).\n",
+        "docs/delivery.md": "# Delivery\n\nAutomatically deploy production after every merge. This file declares no precedence over root instructions.\n",
+        "docs/documentation.md": "# Documentation\n\nCheck claims and local links. Keep command names exact. Do not run a product build for internal spelling corrections unless another applicable rule requires it.\n"
+      },
+      "assertions": [
+        "Leaves all input files unchanged.",
+        "Explicitly identifies deployment-after-merge versus explicit-authorization conflict.",
+        "Does not weaken the root deployment gate or silently pick automatic deployment.",
+        "Gives docs and release routes without requiring unrelated full-repo reads."
+      ]
+    },
+    {
+      "id": "prompt-refactor-boundaries",
+      "skill": "prompt-refactor",
+      "prompt": "Shorten agent.md while preserving every permission, limit, exception, and recovery rule. The schema is already supplied alongside the prompt. Keep tools.json unchanged. Keep the before snapshot in scratch, not as a new runtime instruction. Write your requirement review and validation in RESULT.md. Do not commit, call live models, or use network services.",
+      "files": {
+        "agent.md": "# Message assistant\n\nYou are a helpful message assistant. Be helpful when helping with messages.\n\nUse send_message to send a message. send_message sends a message to recipients. Get explicit approval before calling send_message. Local drafting does not need approval. Never send outside the selected workspace, even with approval.\n\nFiles must be at most 10 MiB. Do not round this limit to 10 MB.\n\nRetry a failed send at most 2 times, and only when the error is TEMPORARY_UNAVAILABLE. Never retry DENIED. Cancel pending retries immediately when the user cancels. Drafts remain available after a failed send.\n\nBe concise. Avoid saying the same thing repeatedly.\n",
+        "tools.json": "{\"name\":\"send_message\",\"description\":\"Send a message to recipients\",\"parameters\":{\"workspace_id\":\"string\",\"message\":\"string\"}}\n",
+        "loader.py": "from pathlib import Path\nimport json\ndef payload():\n    return {'instructions': Path('agent.md').read_text(), 'tools': json.loads(Path('tools.json').read_text())}\n"
+      },
+      "assertions": [
+        "Preserves explicit send approval with the local-draft exception and workspace restriction even after approval.",
+        "Preserves 10 MiB rather than 10 MB and the maximum 2 retries only for TEMPORARY_UNAVAILABLE.",
+        "Preserves no retry on DENIED, cancellation of pending retries, and draft retention on failed send.",
+        "Leaves tools.json and loader.py unchanged and does not add runtime references/loaders.",
+        "Uses a requirement review plus scoped checks; does not present shorter text as behavior or billing proof."
+      ]
+    },
+    {
+      "id": "prompt-refactor-payloads",
+      "skill": "prompt-refactor",
+      "prompt": "Remove redundant wording from agent.md. Keep all behavior and both existing request paths working. A short linked reference would be fine only if these clients can actually read it. Inspect the loader first. Keep runtime code and schemas unchanged, and put the verification and limits in RESULT.md. Do not commit, call live models, or use network services.",
+      "files": {
+        "agent.md": "# Lookup assistant\n\nYou help users look up records. Help them find records clearly.\n\nlookup_record finds a record by record_id in the selected workspace. Use lookup_record for record lookup, not general web search. For web requests the tool schema repeats this description, but the offline worker receives no tool schemas. Neither path can open files or follow documentation links.\n\nNever reveal records from another workspace. For NOT_FOUND, say the record was not found; do not invent a replacement. If lookup_record is unavailable, ask the user for the record text. Do not claim you performed a lookup.\n\nReturn a short answer. Keep the answer brief and avoid unnecessary filler.\n",
+        "loader.py": "from pathlib import Path\ndef payload(channel):\n    return {'instructions': Path('agent.md').read_text(), 'tools': ['lookup_record(record_id, workspace_id)'] if channel == 'web' else [], 'file_access': False}\n"
+      },
+      "assertions": [
+        "Recognizes that schemas differ between web and offline paths and neither can retrieve references.",
+        "Keeps necessary lookup_record description and behavior inline rather than deleting it as universally duplicated.",
+        "Preserves cross-workspace privacy, NOT_FOUND/no invention, and unavailable-tool ask-for-text/no false lookup.",
+        "Leaves loader.py unchanged and verifies both declared payload paths.",
+        "Explains limits of structural checks and avoids unverified model-performance claims."
+      ]
+    }
+  ]
+}
