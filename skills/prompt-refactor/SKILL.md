@@ -44,6 +44,10 @@ them in every affected path. Keep workflow rules the schema does not express.
 Move detail to references only if the runtime can retrieve it when needed;
 otherwise keep the necessary instructions inline.
 
+Separate reusable instructions from changing task history. Where the runtime
+supports it, keep stable instructions in a consistent prefix and append changing
+state separately; do not repeatedly rewrite the whole history into that prefix.
+
 Keep schemas, handlers, approval policies, and loading behavior unchanged.
 Preserve useful examples, metadata, licensing, and project conventions. Prefer
 a direct text edit over a new loader or abstraction.

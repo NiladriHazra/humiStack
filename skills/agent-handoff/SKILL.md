@@ -27,8 +27,8 @@ Keep a compact brief:
 Goal: outcome and requested scope
 Location: repository/worktree, branch, HEAD, access requirements
 State: completed work, changed files, uncommitted work, active jobs
-Decisions: important choices, constraints, and rejected approaches
-Checks: exact commands, results, revision/environment, skipped paths
+Decisions: important choices with reasons, constraints, and rejected approaches
+Checks: executed commands/results, revision/environment, evidence locations, skipped paths
 Open: blockers, failures, uncertainties, and pending decisions
 Next: first concrete action, then remaining steps
 Authority: what the user authorized and what still needs a decision
@@ -61,7 +61,9 @@ files. Do not delete a worktree or terminate unrelated jobs as handoff cleanup.
 The receiving agent reads the current request and local instructions, then checks
 the actual path, branch, revision, and diff against the brief. Reconcile drift
 before editing; do not reset newer work to match stale context. Reuse check results
-only while the relevant source and environment still match.
+only while the relevant source and environment still match. Retrieve supporting
+evidence before relying on exact historical values or errors; a summary alone
+does not establish them. Mark missing evidence unverified rather than guessing.
 
 Report the actual state: **prepared** means a brief exists; **delivered** means it
 was sent through the transport; **resumed** means the recipient has acknowledged

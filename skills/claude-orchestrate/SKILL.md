@@ -46,7 +46,7 @@ Context: source files, contracts, and known facts
 Scope: allowed files or exact research questions; working directory and base
 Limits: project rules, forbidden changes, and the user's authority
 Done: focused checks or cited findings
-Report: STATUS done|blocked; CHANGED or FINDINGS; CHECKS; OPEN; SESSION
+Report: STATUS done|blocked; CHANGED or FINDINGS; CHECKS command/result/revision; EVIDENCE; OPEN; SESSION
 ```
 
 ## Run the assigned CLI
@@ -75,8 +75,14 @@ just to start a worker. Put secrets through the host's credential mechanism.
 
 ## Verify and finish
 
+Keep reports to decisions with reasons, new results, and next actions. Leave large
+logs in approved scratch and return retrievable evidence locations, not repeated
+transcripts. Keep worker sessions separate as well as their writable checkouts.
+
 Inspect actual diffs and results. Run relevant checks; open important research
-sources and separate observed facts from inference. A worker's “done” is not proof.
+sources and exact-value evidence rather than relying on a summary. Mark unavailable
+evidence unverified and separate observed facts from inference. A worker's “done”
+is not proof.
 Send precise corrections through supported follow-up controls. Reuse sessions
 where the host permits; follow its rules if a fresh review task is required.
 

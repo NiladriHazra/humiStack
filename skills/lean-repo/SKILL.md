@@ -18,6 +18,8 @@ otherwise apply the requested cleanup.
 Start with the entry instructions and their immediate references. Follow links
 selectively. Skip dependencies, generated output, secrets, and unrelated projects.
 Use scoped search and symbol tools before adding an index or other infrastructure.
+Keep exploration output bounded and retain evidence locations for later retrieval
+instead of copying large logs into every task's context.
 
 Choose two or three real tasks, including a risky boundary. Find their source
 owners, callers, contracts, and relevant tests. Directory names are not proof

@@ -28,15 +28,19 @@ only work with existing memory/setup.
 Fetch `maxmem_get_latest_handoff` and relevant `maxmem_list_project_memory`, or
 run `maxmem inject` and `maxmem memory` in the correct repository. Read only what
 helps the current task. Compare the capsule's branch, revision, changed files,
-and checks with live Git state before continuing. Old memory is context, not
-permission to overwrite work or override the current request.
+and checks with live Git state before continuing. Retrieve supporting evidence
+before relying on an exact historical error, value, identifier, or test result;
+mark unavailable evidence unverified. Old memory is context, not permission to
+overwrite work or override the current request.
 
 ## Save
 
 Record durable decisions, blockers, verification results, and completed tasks
 with the matching `maxmem_save_*` or `maxmem_mark_task_done` tool. Keep notes
-specific and current; do not mark an unfinished task done. For a handoff, capture
-the goal, worktree/revision, changes, decisions, checks, blockers, and next action.
+specific and current. Distinguish proposed checks from executed commands, recording
+the result, revision, environment, and evidence location. Do not mark unfinished
+work done. A handoff captures the goal, worktree/revision, changes, decisions,
+checks, blockers, and next action.
 Save missing task details as project memory; pass a known transcript path when
 available, never an invented one. Call `maxmem_save_handoff` with supported fields,
 compact verbosity, and raw chat off, then inspect the saved result.
